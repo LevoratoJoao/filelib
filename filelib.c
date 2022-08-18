@@ -10,9 +10,9 @@
  * @return FILE*
  */
 FILE *cr_file(char *name) {
-    FILE *file = fopen(name, "w");
+    FILE *file = fopen(name, "w+");
     if (file == NULL) {
-        printf("error: fail to open file\n");
+        printf("error: fail to create file\n");
         return NULL;
     }
     return file;
@@ -29,6 +29,17 @@ void cl_file(FILE *file, char *name) {
     fclose(file);
 }
 
+FILE *op_file(char *name) {
+    FILE *file = fopen(name, "r+");
+    if (file == NULL)
+    {
+        printf("error: fail to open file\n");
+        return NULL;
+    }
+    else
+        return file;
+}
+
 /**
  * @brief Read all the file and returns the number of lines in this file
  *
@@ -36,11 +47,16 @@ void cl_file(FILE *file, char *name) {
  * @param name
  * @return int*
  */
-int ln_file(FILE *file, char *name) {
-    int ln;
+int ln_file(FILE *file) {
+    int ln = 1;
+    char c;
+    //(c = fgetc(file)) != EOF
     while (1) {
-        fscanf(file, "%d", &ln);
-        if (feof(file)) break;
+        fscanf(file, "%c", &c);
+        if (c == '\n')
+            ln++;
+        if (feof(file))
+            break;
     }
     fclose(file);
     return ln;
